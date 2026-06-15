@@ -19,7 +19,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.models import Advertiser
 from src.recon.base import ReconFindingData, ReconSource
 from src.scrapers.browser import launch_browser
-from src.config.settings import get_settings
 
 logger = logging.getLogger(__name__)
 
@@ -43,7 +42,7 @@ class LinkedInDDGRecon(ReconSource):
         query = f'site:linkedin.com "{advertiser.name}" Akwa Ibom'
         url = f"{DDG_HTML_URL}?q={quote_plus(query)}"
 
-        async with launch_browser(headless=get_settings().recon_browser_headless) as (_browser, _ctx, page):
+        async with launch_browser(headless=True) as (_browser, _ctx, page):
             logger.info("[linkedin_ddg] Searching DDG for %r", query)
             try:
                 await page.goto(url, timeout=_NAV_TIMEOUT, wait_until="domcontentloaded")

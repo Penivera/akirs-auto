@@ -52,7 +52,7 @@ class SearchEngineRecon(ReconSource):
         findings: list[ReconFindingData] = []
         settings = get_settings()
 
-        async with launch_browser(headless=get_settings().recon_browser_headless) as (_browser, _ctx, page):
+        async with launch_browser(headless=True) as (_browser, _ctx, page):
             for template in self.QUERY_TEMPLATES:
                 query = template.format(name=advertiser.name)
                 try:

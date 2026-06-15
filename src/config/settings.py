@@ -28,7 +28,7 @@ class Settings(BaseSettings):
         )
     )
     fb_ads_country: str = Field(default="Nigeria")
-    fb_ads_headless: bool = Field(default=False)
+    fb_ads_headless: bool = Field(default=True)
     fb_ads_user_data_dir: Path = Field(default=Path(".akirs-browser/facebook"))
     fb_ads_max_scrolls: int = Field(default=40)
     fb_ads_empty_scroll_threshold: int = Field(default=5)
@@ -54,7 +54,7 @@ class Settings(BaseSettings):
     recon_search_delay_seconds: float = Field(default=2.0)
 
     # Enrichment browser pool
-    recon_browser_headless: bool = Field(default=False)
+    recon_browser_headless: bool = Field(default=True)
     recon_browser_pool_size: int = Field(default=2)
 
     # Website scraper

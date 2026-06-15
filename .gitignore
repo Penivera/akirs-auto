@@ -29,7 +29,7 @@ Thumbs.db
 .auth/
 .akirs-browser/
 *.pyc
-# .claude/
+.claude/
 agent*.md
 *.db
 *.db-journal

@@ -334,66 +334,6 @@ function setActiveNav(route) {
   });
 }
 
-function captureScraperFormState() {
-  const form = document.querySelector("#scraper-config");
-  if (!form) return null;
-
-  const active = document.activeElement;
-  const activeName =
-    active && form.contains(active) && active.name ? active.name : null;
-
-  const values = {};
-  form.querySelectorAll("input, select, textarea").forEach((el) => {
-    if (!el.name) return;
-    values[el.name] = el.value;
-  });
-
-  // Whether the optional Facebook-login disclosure was expanded.
-  const fbLogin = form.querySelector(".fb-login-optional");
-
-  return {
-    values,
-    activeName,
-    selectionStart: active?.selectionStart ?? null,
-    selectionEnd: active?.selectionEnd ?? null,
-    fbLoginOpen: fbLogin ? fbLogin.open : false,
-  };
-}
-
-function restoreScraperFormState(snapshot) {
-  if (!snapshot) return;
-  const form = document.querySelector("#scraper-config");
-  if (!form) return;
-
-  // Re-open the optional FB-login disclosure before restoring its field values,
-  // otherwise the inputs inside are present but the panel reads as collapsed.
-  if (snapshot.fbLoginOpen) {
-    const fbLogin = form.querySelector(".fb-login-optional");
-    if (fbLogin) fbLogin.open = true;
-  }
-
-  Object.entries(snapshot.values).forEach(([name, value]) => {
-    const el = form.querySelector(`[name="${name}"]`);
-    // Don't clobber a freshly rendered value the user never touched; only restore
-    // when the live value differs from what the re-render produced.
-    if (el && el.value !== value) el.value = value;
-  });
-
-  if (snapshot.activeName) {
-    const el = form.querySelector(`[name="${snapshot.activeName}"]`);
-    if (el) {
-      el.focus({ preventScroll: true });
-      if (snapshot.selectionStart != null && typeof el.setSelectionRange === "function") {
-        try {
-          el.setSelectionRange(snapshot.selectionStart, snapshot.selectionEnd);
-        } catch {
-          // setSelectionRange is invalid for some input types (e.g. email) — ignore.
-        }
-      }
-    }
-  }
-}
-
 function render() {
   const route = getRoute();
   const pages = {
@@ -411,13 +351,8 @@ function render() {
   const dataRoutes = ["dashboard", "results", "review", "taxable", "analytics"];
   const banner = dataRoutes.includes(activeRoute) ? dataBanner() : "";
   const authHadFocus = authRoot?.contains(document.activeElement);
-  // The scraper config form is re-painted wholesale on every poll-driven render.
-  // Snapshot its field values + caret/focus first so in-progress typing (e.g. the
-  // optional Facebook credentials) survives the re-render, then restore after.
-  const formState = captureScraperFormState();
   app.innerHTML = banner + (pages[route] || renderDashboard)();
-  restoreScraperFormState(formState);
-  if (!authHadFocus && !formState?.activeName) app.focus({ preventScroll: true });
+  if (!authHadFocus) app.focus({ preventScroll: true });
   renderAuthPanel();
   updateAuthChrome();
   updateTopbarStatus();

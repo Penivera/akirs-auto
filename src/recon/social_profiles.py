@@ -21,7 +21,6 @@ from src.db.models import Advertiser, SocialLink, SocialProfile
 from src.recon.base import ReconFindingData, ReconSource
 from src.recon.extractors import extract_contact_from_bio
 from src.scrapers.browser import launch_browser
-from src.config.settings import get_settings
 
 logger = logging.getLogger(__name__)
 
@@ -161,7 +160,7 @@ class SocialProfileRecon(ReconSource):
 
         findings: list[ReconFindingData] = []
 
-        async with launch_browser(headless=get_settings().recon_browser_headless) as (_browser, _ctx, page):
+        async with launch_browser(headless=True) as (_browser, _ctx, page):
             for link in links:
                 try:
                     findings.extend(

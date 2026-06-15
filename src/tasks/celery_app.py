@@ -4,19 +4,6 @@ Tasks run in the default prefork pool; async code is invoked via asyncio.run()
 inside each task so we don't have to monkey-patch with gevent/eventlet.
 """
 
-import sys
-from pathlib import Path
-
-# Task modules import each other as top-level packages (e.g.
-# ``from tasks.phase2_recon import ...``, matching pyproject's
-# ``pythonpath = ["src"]``). The Celery worker is launched from the repo root,
-# which only puts the repo root on sys.path, so add ``src/`` here — this lets the
-# worker be started with a plain ``uv run celery -A src.tasks.celery_app ...``
-# (no ``PYTHONPATH=src`` prefix needed).
-_SRC = Path(__file__).resolve().parent.parent
-if str(_SRC) not in sys.path:
-    sys.path.insert(0, str(_SRC))
-
 from celery import Celery
 
 from src.config.settings import get_settings
@@ -41,8 +28,8 @@ celery_app.conf.update(
     enable_utc=True,
     task_default_queue="akirs",
     task_routes={
-        "tasks.phase1_scrape.*": {"queue": "scrape"},
-        "tasks.phase2_recon.*": {"queue": "recon"},
+        "akirs.tasks.phase1_scrape.*": {"queue": "scrape"},
+        "akirs.tasks.phase2_recon.*": {"queue": "recon"},
     },
     task_track_started=True,
     task_acks_late=True,

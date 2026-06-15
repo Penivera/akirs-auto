@@ -16,7 +16,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.models import Advertiser
 from src.recon.base import ReconFindingData, ReconSource
 from src.scrapers.browser import launch_browser
-from src.config.settings import get_settings
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +39,7 @@ class GoogleMapsRecon(ReconSource):
         query = f"{advertiser.name} Akwa Ibom"
         url = f"https://www.google.com/maps/search/?api=1&query={quote_plus(query)}"
 
-        async with launch_browser(headless=get_settings().recon_browser_headless) as (_browser, _ctx, page):
+        async with launch_browser(headless=True) as (_browser, _ctx, page):
             logger.info("[google_maps] Searching for %r", query)
             try:
                 await page.goto(url, timeout=_NAV_TIMEOUT, wait_until="domcontentloaded")

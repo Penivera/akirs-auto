@@ -21,7 +21,6 @@ from src.db.models import Advertiser, SocialLink
 from src.recon.base import ReconFindingData, ReconSource
 from src.recon.extractors import extract_addresses, extract_emails, extract_phones
 from src.scrapers.browser import launch_browser
-from src.config.settings import get_settings
 
 logger = logging.getLogger(__name__)
 
@@ -118,7 +117,7 @@ class WebsiteRecon(ReconSource):
         findings: list[ReconFindingData] = []
 
         # Share a single browser instance across all links for this advertiser.
-        async with launch_browser(headless=get_settings().recon_browser_headless) as (_browser, _ctx, page):
+        async with launch_browser(headless=True) as (_browser, _ctx, page):
             for link in links:
                 try:
                     findings.extend(await self._scrape_site(page, link.url))

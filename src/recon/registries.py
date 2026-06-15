@@ -106,7 +106,7 @@ class RegistryRecon(ReconSource):
         findings: list[ReconFindingData] = []
 
         try:
-            async with launch_browser(headless=get_settings().recon_browser_headless) as (_browser, _ctx, page):
+            async with launch_browser(headless=True) as (_browser, _ctx, page):
                 await page.goto(_CAC_SEARCH_URL, timeout=_NAV_TIMEOUT, wait_until="networkidle")
 
                 # The search form uses a text input + button
