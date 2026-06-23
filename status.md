@@ -31,7 +31,7 @@
   actually there.
 
   Ran 1 shell command (ctrl+o to expand)
-
+devon ...
 ● I'll explore the architecture in parallel: the frontend polling, the
   backend/auth, and the AI chatbot widget.
 
